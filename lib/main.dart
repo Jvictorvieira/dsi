@@ -82,7 +82,11 @@ class _RandomWordsState extends State<RandomWords> {
           return Dismissible(key: Key(_suggestions[index].asPascalCase),
               onDismissed: (direction) {
                 setState(() {
+                  if (_saved.contains(_suggestions[index])) {
+                    _saved.remove(_suggestions[index]);
+                  }
                   _suggestions.removeAt(index);
+                  ;
                 });
                 },
               child: _buildRow(_suggestions[index]));
@@ -92,7 +96,7 @@ class _RandomWordsState extends State<RandomWords> {
   }
   Widget _buildRow(WordPair pair) {
     final alreadySaved = _saved.contains(pair);
-    
+
     return Wrap(
       children: [
         ListTile(
@@ -100,7 +104,12 @@ class _RandomWordsState extends State<RandomWords> {
             pair.asPascalCase,
             style: _biggerFont,
           ),
+          onTap: () {
+            // Colocar o editor de text aqui*
+          },
+
         ),
+
         IconButton(
           onPressed: () {
           setState(() {
@@ -114,7 +123,8 @@ class _RandomWordsState extends State<RandomWords> {
           icon: Icon(
             alreadySaved ? Icons.favorite : Icons.favorite_border,
             color: alreadySaved ? Colors.green : null,
-          ),)
+          ),
+        ),
       ]
     );
   }
