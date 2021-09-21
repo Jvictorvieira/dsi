@@ -79,7 +79,8 @@ class _RandomWordsState extends State<RandomWords> {
           if (index >= _suggestions.length) {
             _suggestions.addAll(generateWordPairs().take(10));
           }
-          return Dismissible(key: Key(_suggestions[index].asPascalCase),
+          return Dismissible(
+              key: Key(_suggestions[index].asPascalCase),
               onDismissed: (direction) {
                 setState(() {
                   if (_saved.contains(_suggestions[index])) {
@@ -89,12 +90,34 @@ class _RandomWordsState extends State<RandomWords> {
                   ;
                 });
                 },
-              child: _buildRow(_suggestions[index]));
+              child: _buildRow(index ,_suggestions[index]));
 
         }
     );
   }
-  Widget _buildRow(WordPair pair) {
+  void changeWordPair(index) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Change Suggestions'),
+            ),
+            body: TextFormField(
+              initialValue: _suggestions[index].toString(),
+              onFieldSubmitted: (input) {
+                setState(() {
+                  _suggestions[index] = WordPair(input, " ");
+                });
+              },
+
+            ),
+          );
+        },
+      ),
+    );
+  }
+  Widget _buildRow(index, WordPair pair) {
     final alreadySaved = _saved.contains(pair);
 
     return Wrap(
@@ -105,9 +128,8 @@ class _RandomWordsState extends State<RandomWords> {
             style: _biggerFont,
           ),
           onTap: () {
-            // Colocar o editor de text aqui*
+            changeWordPair(index);
           },
-
         ),
 
         IconButton(
